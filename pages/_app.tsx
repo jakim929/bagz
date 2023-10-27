@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { WagmiProvider } from 'wagmi'
 import { createConfig, http } from 'wagmi'
-import { baseGoerli, foundry } from 'wagmi/chains'
+import { foundry } from 'wagmi/chains'
 import '@/styles/globals.css'
 import { PrivyProvider } from '@privy-io/react-auth'
 

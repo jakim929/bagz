@@ -1,8 +1,12 @@
+import { BagzAbi } from '@/abis/BagzAbi'
 import { Listing } from '@/lib/types'
 import { karla } from '@/pages'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
+import { multicall } from 'viem/actions'
+import { useChainId, usePublicClient, useReadContract, useReadContracts } from 'wagmi'
 
 const Listing = ({ title, description, imageURL, price, id }: Listing) => {
   return (
@@ -23,31 +27,36 @@ const Listing = ({ title, description, imageURL, price, id }: Listing) => {
 }
 
 const Listings = () => {
-  const listings: Listing[] = [{
-    id: BigInt(1),
-    title: 'Ledger',
-    description: 'Ledger NanoX',
-    imageURL: 'https://i.ibb.co/wpvnWXx/ledger-nano-img.jpg',
-    price: parseUnits('100', 6),
-    owner: '0x7C745902B3d90f474337463adef754d18b4121E6',
-    referralReward: parseUnits('1', 6),
-  }, {
-    id: BigInt(2),
-    title: 'Ledger',
-    description: 'Ledger NanoX',
-    imageURL: 'https://i.ibb.co/wpvnWXx/ledger-nano-img.jpg',
-    price: parseUnits('100', 6),
-    owner: '0x7C745902B3d90f474337463adef754d18b4121E6',
-    referralReward: parseUnits('1', 6),
-  }, {
-    id: BigInt(3),
-    title: 'Ledger',
-    description: 'Ledger NanoX',
-    imageURL: 'https://i.ibb.co/wpvnWXx/ledger-nano-img.jpg',
-    price: parseUnits('100', 6),
-    owner: '0x7C745902B3d90f474337463adef754d18b4121E6',
-    referralReward: parseUnits('1', 6),
-  }]
+  const { data: listingsCount } = useReadContract({
+    address: process.env.NEXT_PUBLIC_BAGZ_CONTRACT_ADDRESS as `0x${string}`,
+    chainId: 31337,
+    abi: BagzAbi,
+    functionName: 'listingCount',
+  })
+  const chainId = useChainId()
+  console.log('lukas', chainId)
+  const client = usePublicClient({ chainId: 31337 })
+  const { data } = useReadContracts({
+    contracts: Array.from(Array(Number(listingsCount ?? 0)).keys()).map((i) => ({
+      address: process.env.NEXT_PUBLIC_BAGZ_CONTRACT_ADDRESS as `0x${string}`,
+      abi: BagzAbi,
+      functionName: 'listings',
+      args: [i],
+    })),
+  })
+
+  const listings: Listing[] = data
+    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    ? data.map(({ result }: { result: any[] }) => ({
+      id: result[0],
+      price: result[1],
+      owner: result[2],
+      referralReward: result[3],
+      title: result[4],
+      description: result[5],
+      imageURL: result[6],
+    }))
+    : []
 
   return (
     <div className={`w-full flex flex-col items-start ${karla.className} space-y-4`}>

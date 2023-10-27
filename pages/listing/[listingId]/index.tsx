@@ -1,6 +1,8 @@
 import { BagzAbi } from '@/abis/BagzAbi'
 import StackedTopNavLayout from '@/components/stacked-top-nav-layout'
+import { Listing } from '@/lib/types'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Address, formatUnits, parseUnits } from 'viem'
 import { useContractRead, useReadContract } from 'wagmi'
 
@@ -36,35 +38,49 @@ const useListing = (listingId: bigint) => {
 export default function Page() {
   const router = useRouter()
   const { listingId } = router.query
-
+  const [listing, setListing] = useState<Listing | null>(null)
   const { data } = useListing(BigInt((listingId || '0') as string))
 
-  const [id, price, owner, referralReward, title, description, imageUrl] = data
-  console.log(data)
+  useEffect(() => {
+    if (data) {
+      const [id, price, owner, referralReward, title, description, imageUrl] = data
+      setListing({
+        id,
+        price,
+        owner,
+        referralReward,
+        title,
+        description,
+        imageURL: imageUrl,
+      })
+    }
+  }, [data])
 
   return (
     <StackedTopNavLayout>
-      <div className='flex-1 flex flex-col'>
-        <div className='flex-1 p-6 '>
-          <div className=''>
-            <img src={imageUrl} className='w-full' />
+      {listing && (
+        <div className='flex-1 flex flex-col'>
+          <div className='flex-1 p-6 '>
+            <div className=''>
+              <img src={listing.imageURL} className='w-full' />
+            </div>
+            <div className='flex flex-col'>
+              <div>
+                {listing.title}
+              </div>
+              <div>
+                {listing.description}
+              </div>
+              <div>
+                {formatUnits(listing.price, 6)}
+              </div>
+            </div>
           </div>
-          <div className='flex flex-col'>
-            <div>
-              {title}
-            </div>
-            <div>
-              {description}
-            </div>
-            <div>
-              {formatUnits(price, 6)}
-            </div>
+          <div className='flex px-6 py-4'>
+            <Button onClick={() => router.push('/listing/1')}>Buy now</Button>
           </div>
         </div>
-        <div className='flex px-6 py-4'>
-          <Button onClick={() => router.push('/listing/1')}>Buy now</Button>
-        </div>
-      </div>
+      )}
     </StackedTopNavLayout>
   )
 }

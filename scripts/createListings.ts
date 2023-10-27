@@ -5,6 +5,9 @@ import { Address, createTestClient, createWalletClient, http, parseEther, parseU
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { foundry } from 'viem/chains'
 
+const USDC_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3' as Address
+const BAGZ_CONTRACT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512' as Address
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const listing = {
@@ -34,28 +37,27 @@ const spawnFundedWallet = async (anvil: typeof testClient) => {
   return createWalletClient({
     chain: foundry,
     account: newAccount,
-    transport: http(process.env.NEXT_PUBLIC_JSON_RPC_HTTP_URL!),
+    transport: http('http://127.0.0.1:8545'),
   })
 }
 
 const initializeWallet = async (anvil: typeof testClient) => {
-  const amount = parseUsdc('1000000')
+  const amount = parseUsdc('10000000')
   const walletClient = await spawnFundedWallet(anvil)
+
   await walletClient.writeContract({
     abi: MockUSDCAbi,
-    address: process.env.NEXT_PUBLIC_USDC_CONTRACT_ADDRESS as Address,
+    address: USDC_CONTRACT_ADDRESS as Address,
     functionName: 'mint',
     args: [walletClient.account.address, amount],
   })
 
   await walletClient.writeContract({
     abi: MockUSDCAbi,
-    address: process.env.NEXT_PUBLIC_USDC_CONTRACT_ADDRESS as Address,
+    address: USDC_CONTRACT_ADDRESS as Address,
     functionName: 'approve',
-    args: [process.env.NEXT_PUBLIC_BAGZ_CONTRACT_ADDRESS as Address, amount],
+    args: [BAGZ_CONTRACT_ADDRESS as Address, amount],
   })
-
-  await sleep(6000)
 
   return walletClient
 }
@@ -67,9 +69,8 @@ const createListing = async () => {
   const newWalletClient = await initializeWallet(testClient)
   const result = await newWalletClient.writeContract({
     abi: BagzAbi,
-    address: process.env.NEXT_PUBLIC_BAGZ_CONTRACT_ADDRESS as Address,
+    address: BAGZ_CONTRACT_ADDRESS as Address,
     functionName: 'registerItem',
-    // set for 20 seconds later
     args: [price, referralAward, referralTotal, listing.title, listing.description, listing.imageUrl],
   })
   console.log('created an item with', newWalletClient.account.address, result)
@@ -83,7 +84,7 @@ const createSlashableAlarms = async () => {
 
   for (let i = 0; i < 10; i++) {
     await Promise.all([createListing()])
-    await sleep(5000)
+    // await sleep(5000)
   }
 }
 

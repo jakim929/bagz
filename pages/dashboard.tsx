@@ -1,4 +1,5 @@
 import AuthenticatedPage from '@/components/authenticated-page'
+import Listings from '@/components/listings'
 import Search from '@/components/search'
 import Section from '@/components/section'
 import { links } from '@/lib/links'
@@ -9,11 +10,10 @@ const Dashboard = () => {
   const { user, linkPhone, linkGoogle, linkApple } = usePrivy()
   return (
     <AuthenticatedPage>
-      <Section>
-        <div className='flex flex-col items-center space-y-2'>
-          <Search />
-        </div>
-      </Section>
+      <div className='flex flex-col items-center space-y-2'>
+        <Search />
+        <Listings />
+      </div>
     </AuthenticatedPage>
   )
 }

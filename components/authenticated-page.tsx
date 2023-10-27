@@ -33,8 +33,8 @@ const AuthenticatedPage = ({ children }: Props) => {
       <QueryClientProvider client={queryClient}>
         <div className='bg-white'>
           <TopNav />
-          <main className='mx-auto max-w-screen-md pt-20 pb-16 px-safe sm:pb-0 bg-white'>
-            <div className='p-6'>{children}</div>
+          <main className='mx-auto pt-20 pb-16 px-safe sm:pb-0'>
+            <div className='p-6 w-full'>{children}</div>
           </main>
           <BottomNav />
         </div>

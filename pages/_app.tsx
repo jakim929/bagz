@@ -8,14 +8,14 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { WagmiProvider } from 'wagmi'
 import { createConfig, http } from 'wagmi'
-import { baseGoerli } from 'wagmi/chains'
+import { baseGoerli, foundry } from 'wagmi/chains'
 import '@/styles/globals.css'
 import { PrivyProvider } from '@privy-io/react-auth'
 
 const config = createConfig({
-  chains: [baseGoerli],
+  chains: [foundry],
   transports: {
-    [baseGoerli.id]: http(),
+    [foundry.id]: http('http://127.0.0.1:8545'),
   },
 })
 

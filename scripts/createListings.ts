@@ -13,7 +13,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 const listing = {
   title: 'Ledger Nano X',
   description: 'Ledger Nano X a hardware wallet',
-  imageUrl: 'https://ibb.co/p4mHz89',
+  imageUrl: 'https://i.ibb.co/wpvnWXx/ledger-nano-img.jpg',
 }
 
 const parseUsdc = (amount: string) => {

@@ -13,7 +13,7 @@
     "deploy:anvil:mockusdc": "source .env.local && pnpm deploy:anvil:multicall3 && forge create contracts/src/MockUSDC.sol:MockUSDC --rpc-url $JSON_RPC_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY",
     "deploy:anvil:bagz": "source .env.local && forge create contracts/src/Bagz.sol:Bagz --rpc-url $JSON_RPC_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --constructor-args $OWNER_ADDRESS $USDC_CONTRACT_ADDRESS",
     "dev:createlistings": "source .env.local && tsx ./scripts/createListings.ts",
-    "dev:contracts": "concurrently -n anvil,deploy_contracts \"pnpm anvil --silent\" \"sleep 2 && pnpm deploy:anvil:multicall3 && pnpm deploy:anvil:mockusdc && pnpm deploy:anvil:bagz && pnpm dev:createlistings \"",
+    "dev:contracts": "concurrently -n anvil,deploy_contracts \"pnpm anvil \" \"sleep 2 && pnpm deploy:anvil:multicall3 && pnpm deploy:anvil:mockusdc && pnpm deploy:anvil:bagz && pnpm dev:createlistings \"",
     "dev": "concurrently -n contracts,frontend -c cyan,magenta \"pnpm dev:contracts\" \"pnpm dev:frontend\""
   },
   "dependencies": {

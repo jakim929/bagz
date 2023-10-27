@@ -1,3 +1,7 @@
+# Figma Designs
+
+[Figma](https://www.figma.com/file/xkVWgqBqvCNAE9sdtxk8w1/Paradigm-Hackathon?type=design&node-id=0%3A1&mode=design&t=uYPdPz8ehQr8xlY7-1)
+
 # Privy PWA Demo
 
 This is a template progressive web app (PWA) built with [Privy](https://www.privy.io/), [Viem](https://viem.sh/), [NextPWA](https://www.npmjs.com/package/next-pwa), and [TailwindCSS](https://tailwindcss.com/). All transactions are sent on the [Base](https://base.org/) Goerli testnet.

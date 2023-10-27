@@ -38,6 +38,7 @@ contract Bagz is Owned, ReentrancyGuard{
 
   constructor(address _owner, address _erc20TokenAddress) Owned(_owner)  {
     erc20Token = ERC20(_erc20TokenAddress);
+		listingCount = 0;
   }
 
   function signUpWithReferral(address _referrer) public {
@@ -120,7 +121,7 @@ contract Bagz is Owned, ReentrancyGuard{
 
 			uint256 referralRewardTotal = referralPools[_listingId];
 
-			if (referralReward >= referralRewardTotal) {
+			if (referralReward <= referralRewardTotal) {
 				referralPools[_listingId] -= referralReward;
 				rewardBalances[referrer] += referralReward;
 

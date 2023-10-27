@@ -12,6 +12,7 @@ contract Bagz is Owned, ReentrancyGuard{
 	event ReferralRewardReceived(uint256 indexed listingId, address indexed referrer, address indexed referredBuyer, uint256 rewardAmount);
 
   struct Listing {
+		uint256 id;
     uint256 price;
     address owner;
 	  uint256 referralReward;
@@ -65,6 +66,7 @@ contract Bagz is Owned, ReentrancyGuard{
 		uint256 listingId = listingCount;
 
 		listings[listingId] = Listing({
+			id: listingId,
       owner: msg.sender,
       price: _price,
       referralReward: _referralReward,
